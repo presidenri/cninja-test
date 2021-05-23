@@ -1,59 +1,53 @@
 // Create 2-dimensioanl array with 11 rows and 10 columns.
 const twoDimArray = new Array(11).fill(0).map(() => new Array(10).fill(0));
 
-function mark2DimArray(arr, inArray = 0, outArray = 0, dRange = 0) {
-    dArray = arr
-    // Center
-    // dArray[4][4] = 1;
+function mark2DimArray(arr, innerArr = 0, outerArr = 0, diamondRange = 0) {
+    var diamondArray        = arr;
+    var diamondTotalLength  = (diamondRange * 2) + 1;
 
-    // dArray[4][3] = 1;
-    // dArray[4][2] = 1;
-    // dArray[4][5] = 1;
-    // dArray[4][6] = 1;
-
-    dArray[outArray][inArray] = 1;
-    for (var i = 1; i <= dRange; i++) {
-        dArray[outArray][inArray - i] = 1;
-        dArray[outArray][inArray + i] = 1;
+    if (diamondTotalLength > diamondArray[0].length) {
+        console.log("Diamond range is too long");
+        return;
     }
 
-    // Above
-    // dArray[3][4] = 1;
-    // dArray[3][3] = 1;
-    // dArray[3][5] = 1;
+    if (innerArr + diamondRange + 1 > diamondArray[0].length || innerArr - diamondRange < 0) {
+        console.log("Inner range in the center is out of range");
+        return;
+    }
 
-    // dArray[2][4] = 1;
+    // Mark elements in the center array
+    diamondArray[outerArr][innerArr] = 1;
+    for (var i = 1; i <= diamondRange; i++) {
+        diamondArray[outerArr][innerArr - i] = 1;
+        diamondArray[outerArr][innerArr + i] = 1;
+    }
 
-    for (var j = 1; j <= dRange; j++) {
-        var newRange = dRange - j;
-        var newOutArray = outArray - j
-        dArray[newOutArray][inArray] = 1;
-        for (var i = 1; i <= newRange; i++) {
-            dArray[newOutArray][inArray - i] = 1;
-            dArray[newOutArray][inArray + i] = 1;
+    // Mark the elements in before and after the center array
+    for (var j = 1; j <= diamondRange; j++) {
+        var newRange        = diamondRange - j;
+        var beforeOuterArr  = outerArr - j;
+        var afterOuterArr   = outerArr + j;
+
+        if (beforeOuterArr < 0 || afterOuterArr + 1 > diamondArray.length) {
+            console.log("Outer array out of range");
+            return;
         }
-    }
-    // Below
-    // dArray[5][4] = 1;
-    // dArray[5][3] = 1;
-    // dArray[5][5] = 1;
 
-    // dArray[6][4] = 1;
+        diamondArray[beforeOuterArr][innerArr] = 1;
+        diamondArray[afterOuterArr][innerArr]  = 1;
 
-    for (var j = 1; j <= dRange; j++) {
-        var newRange = dRange - j;
-        var newOutArray = outArray + j
-        dArray[newOutArray][inArray] = 1;
         for (var i = 1; i <= newRange; i++) {
-            dArray[newOutArray][inArray - i] = 1;
-            dArray[newOutArray][inArray + i] = 1;
+            diamondArray[beforeOuterArr][innerArr - i] = 1;
+            diamondArray[beforeOuterArr][innerArr + i] = 1;
+            diamondArray[afterOuterArr][innerArr - i]  = 1;
+            diamondArray[afterOuterArr][innerArr + i]  = 1;
         }
     }
 
     // print formated array
-    console.log(JSON.stringify(dArray)
+    console.log(JSON.stringify(diamondArray)
         .replace(/(\[\[)(.*)(\]\])/g, '[\n  [$2]\n]').replace(/],/g, '],\n  ')
     );
 }
 
-mark2DimArray(twoDimArray, 5, 5, 4)
+mark2DimArray(twoDimArray, 4, 4, 4)
